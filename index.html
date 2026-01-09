@@ -18,7 +18,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        /* --- CSS Global Variables --- */
         :root {
             --primary: #080808;
             --gold: #c5a059;
@@ -29,7 +28,6 @@
             --transition-slow: all 1s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        /* --- Custom Scrollbar --- */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: var(--primary); }
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
@@ -42,9 +40,10 @@
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
             line-height: 1.7;
+            /* স্ক্রিন অনুযায়ী ফন্ট সাইজ অ্যাডজাস্টমেন্ট */
+            font-size: calc(14px + (18 - 14) * ((100vw - 300px) / (1600 - 300)));
         }
 
-        /* --- Premium Custom Cursor --- */
         #cursor {
             position: fixed; width: 8px; height: 8px; background: var(--gold);
             border-radius: 50%; pointer-events: none; z-index: 10001;
@@ -55,129 +54,110 @@
             transition: transform 0.1s ease-out;
         }
 
-        /* --- Full Screen Preloader --- */
+        /* মাউস ছাড়া ডিভাইসে কার্সর হাইড করা */
+        @media (hover: none) and (pointer: coarse) {
+            #cursor, #cursor-follower { display: none; }
+            * { cursor: auto !important; }
+        }
+
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 20000; display: flex; 
             justify-content: center; align-items: center;
         }
-        .loader-wrap { text-align: center; }
+        .loader-wrap { text-align: center; width: 80%; }
         .loader-brand { 
             font-family: 'Cormorant Garamond', serif; 
-            font-size: 2.5rem; color: var(--gold); 
-            letter-spacing: 15px; margin-bottom: 20px;
+            font-size: clamp(1.5rem, 5vw, 2.5rem); color: var(--gold); 
+            letter-spacing: clamp(5px, 2vw, 15px); margin-bottom: 20px;
         }
-        .loader-bar { width: 250px; height: 1px; background: rgba(197, 160, 89, 0.1); position: relative; }
+        .loader-bar { width: 100%; max-width: 250px; height: 1px; background: rgba(197, 160, 89, 0.1); margin: 0 auto; position: relative; }
         .loader-fill { position: absolute; width: 0%; height: 100%; background: var(--gold); left: 0; }
 
-        /* --- Navigation --- */
         nav {
-            position: fixed; top: 0; width: 100%; padding: 40px 10%;
+            position: fixed; top: 0; width: 100%; padding: 30px 5%;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 999; background: transparent;
+            z-index: 999; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
         }
         .logo {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem; letter-spacing: 12px;
+            font-size: clamp(1.2rem, 3vw, 1.8rem); letter-spacing: clamp(5px, 1vw, 12px);
             color: var(--gold); text-decoration: none; font-weight: 500;
         }
-        .nav-links { display: flex; gap: 40px; }
+        .nav-links { display: flex; gap: clamp(15px, 3vw, 40px); }
         .nav-links a {
-            color: var(--white); text-decoration: none; font-size: 0.7rem;
-            text-transform: uppercase; letter-spacing: 3px; font-weight: 300;
+            color: var(--white); text-decoration: none; font-size: 0.65rem;
+            text-transform: uppercase; letter-spacing: 2px; font-weight: 300;
             transition: 0.3s;
         }
-        .nav-links a:hover { color: var(--gold); }
 
-        /* --- Hero Section --- */
         .hero {
             height: 100vh; width: 100%; display: flex; align-items: center;
             justify-content: center; text-align: center; position: relative;
-        }
-        .hero-video-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; opacity: 0.2; z-index: -1;
+            padding: 0 5%;
         }
         .hero-content h1 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(3rem, 10vw, 9rem);
-            font-weight: 300; line-height: 1; text-transform: uppercase;
+            font-size: clamp(2.5rem, 10vw, 9rem);
+            font-weight: 300; line-height: 1.1; text-transform: uppercase;
             margin-bottom: 20px; opacity: 0; transform: translateY(50px);
         }
         .hero-content p {
-            color: var(--gold); letter-spacing: 10px; text-transform: uppercase;
-            font-size: 1rem; margin-bottom: 40px; opacity: 0;
+            color: var(--gold); letter-spacing: clamp(4px, 1vw, 10px); text-transform: uppercase;
+            font-size: clamp(0.7rem, 2vw, 1rem); margin-bottom: 40px; opacity: 0;
         }
 
-        /* --- Sections Style --- */
-        section { padding: 180px 10%; position: relative; }
+        section { padding: clamp(80px, 15vh, 180px) 5%; max-width: 1600px; margin: 0 auto; }
         .tagline { 
             color: var(--gold); text-transform: uppercase; 
-            letter-spacing: 5px; font-size: 0.8rem; display: block; margin-bottom: 20px;
+            letter-spacing: 4px; font-size: 0.7rem; display: block; margin-bottom: 20px;
         }
         .section-h {
-            font-family: 'Cormorant Garamond', serif; font-size: 4rem;
-            font-weight: 300; line-height: 1.1; margin-bottom: 60px;
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 300; line-height: 1.2; margin-bottom: 50px;
         }
 
-        /* --- Luxury Card Grid --- */
         .grid-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
         }
         .luxury-card {
             background: var(--glass); border: 1px solid rgba(197, 160, 89, 0.15);
-            padding: 70px 45px; transition: var(--transition-slow);
-            backdrop-filter: blur(5px); position: relative; overflow: hidden;
+            padding: clamp(40px, 8vw, 70px) clamp(25px, 5vw, 45px); transition: var(--transition-slow);
+            backdrop-filter: blur(5px);
         }
-        .luxury-card:hover { 
-            background: rgba(197, 160, 89, 0.05); 
-            transform: translateY(-20px); border-color: var(--gold);
-        }
-        .luxury-card i { font-size: 2.5rem; color: var(--gold); margin-bottom: 30px; }
-        .luxury-card h3 { 
-            font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; 
-            margin-bottom: 20px; font-weight: 400;
-        }
+        .luxury-card i { font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--gold); margin-bottom: 25px; }
+        .luxury-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; margin-bottom: 15px; }
 
-        /* --- Contact Layout --- */
-        .contact-section { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; }
-        .contact-info-box h4 {
-            color: var(--gold); font-size: 0.7rem; letter-spacing: 4px;
-            text-transform: uppercase; margin-bottom: 10px;
-        }
-        .contact-info-box p { font-size: 1.1rem; margin-bottom: 40px; font-weight: 200; }
+        .contact-section { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(40px, 8vw, 100px); }
+        .contact-info-box p { font-size: clamp(1rem, 2vw, 1.2rem); margin-bottom: 30px; font-weight: 200; }
 
-        /* --- Expensive Form Design --- */
         .premium-form input, .premium-form textarea {
             width: 100%; background: transparent; border: none;
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 20px 0; color: #fff; font-family: 'Montserrat', sans-serif;
-            margin-bottom: 35px; outline: none; font-size: 1rem;
-            transition: 0.5s;
+            padding: 15px 0; color: #fff; font-family: 'Montserrat', sans-serif;
+            margin-bottom: 30px; outline: none; font-size: 1rem;
         }
-        .premium-form input:focus { border-bottom-color: var(--gold); }
         
         .gold-btn {
             background: transparent; border: 1px solid var(--gold);
-            color: var(--gold); padding: 22px 50px; text-transform: uppercase;
-            letter-spacing: 5px; font-size: 0.8rem; cursor: pointer;
-            transition: var(--transition-slow); position: relative;
+            color: var(--gold); padding: 18px clamp(30px, 5vw, 50px); text-transform: uppercase;
+            letter-spacing: 3px; font-size: 0.75rem; cursor: pointer; width: fit-content;
         }
-        .gold-btn:hover { background: var(--gold); color: #000; }
-        .gold-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* --- Footer --- */
-        footer {
-            padding: 100px 10%; border-top: 1px solid rgba(197, 160, 89, 0.1);
-            text-align: center;
+        footer { padding: 80px 5%; border-top: 1px solid rgba(197, 160, 89, 0.1); text-align: center; }
+        .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 5vw, 3.5rem); color: var(--gold); opacity: 0.3; }
+
+        /* Tablet and Mobile adjustments */
+        @media (max-width: 1024px) {
+            .contact-section { grid-template-columns: 1fr; }
+            .section-h { margin-bottom: 30px; }
         }
-        .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 3rem; color: var(--gold); opacity: 0.3; }
 
-        @media (max-width: 991px) {
-            .contact-section { grid-template-columns: 1fr; gap: 50px; }
-            nav { padding: 30px; }
-            .section-h { font-size: 2.8rem; }
+        @media (max-width: 480px) {
+            nav { padding: 20px 5%; }
+            .nav-links { display: none; } /* মোবাইলে মেনু হাইড রাখা হয়েছে ক্লিন লুকের জন্য */
+            .gold-btn { width: 100%; text-align: center; }
         }
     </style>
 </head>
@@ -209,9 +189,6 @@
                 <h1 id="hero-main-title">Redefining<br>Human Vision</h1>
                 <a href="#contact" class="gold-btn" id="hero-cta">Private Consultation</a>
             </div>
-            <div style="position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);">
-                <div style="width: 1px; height: 100px; background: linear-gradient(to bottom, var(--gold), transparent);"></div>
-            </div>
         </section>
 
         <section id="about">
@@ -231,11 +208,8 @@
             </div>
         </section>
 
-        <div style="height: 100vh; width: 100%; overflow: hidden; position: relative;">
-            <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=2080&q=80" alt="Laboratory" style="width: 100%; height: 120%; object-fit: cover; filter: grayscale(1) brightness(0.5);" id="parallax-img">
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%;">
-                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 8vw; text-transform: uppercase; color: rgba(197,160,89,0.2);">Precision</h2>
-            </div>
+        <div style="height: 60vh; width: 100%; overflow: hidden; position: relative;">
+            <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=2080&q=80" alt="Laboratory" style="width: 100%; height: 140%; object-fit: cover; filter: grayscale(1) brightness(0.5);" id="parallax-img">
         </div>
 
         <section id="services">
@@ -264,10 +238,9 @@
             <span class="tagline">Concierge Inquiry</span>
             <div class="contact-section">
                 <div class="contact-info-box">
-                    <h2 class="section-h" style="font-size: 3rem;">Inquire privately</h2>
+                    <h2 class="section-h">Inquire privately</h2>
                     <h4>Headquarters</h4>
                     <p>Mayfair Eye Institute, 44 Bond St.<br>London, UK</p>
-                    
                     <h4>Direct Access</h4>
                     <p>priority@luminance.com<br>+44 (0) 20 8900 1122</p>
                 </div>
@@ -275,7 +248,7 @@
                 <form class="premium-form" id="bookingForm">
                     <input type="text" id="name" placeholder="FULL NAME" required>
                     <input type="email" id="email" placeholder="EMAIL ADDRESS" required>
-                    <textarea id="message" rows="5" placeholder="TELL US ABOUT YOUR VISION ASPIRATIONS" required></textarea>
+                    <textarea id="message" rows="4" placeholder="DESCRIBE YOUR VISION ASPIRATIONS" required></textarea>
                     <button type="submit" class="gold-btn" id="submitBtn">Send Inquiry</button>
                 </form>
             </div>
@@ -284,21 +257,16 @@
 
     <footer>
         <div class="footer-brand">LUMINANCE</div>
-        <p style="margin-top: 30px; font-weight: 100; letter-spacing: 2px; color: #555;">
+        <p style="margin-top: 20px; font-weight: 100; font-size: 0.7rem; color: #555;">
             &copy; 2026 LUMINANCE OPHTHALMIC INSTITUTE. ALL RIGHTS RESERVED.
         </p>
     </footer>
 
     <script>
-        // --- 1. SMOOTH SCROLL (LENIS) ---
         const lenis = new Lenis();
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // --- 2. LUXURY CURSOR ---
         const cur = document.getElementById('cursor');
         const fol = document.getElementById('cursor-follower');
         document.addEventListener('mousemove', (e) => {
@@ -306,39 +274,27 @@
             gsap.to(fol, { x: e.clientX - 22, y: e.clientY - 22, duration: 0.3 });
         });
 
-        // --- 3. GSAP ANIMATIONS ---
         gsap.registerPlugin(ScrollTrigger);
 
-        // Preloader
         const preTl = gsap.timeline();
-        preTl.to(".loader-fill", { width: "100%", duration: 2, ease: "power4.inOut" })
+        preTl.to(".loader-fill", { width: "100%", duration: 1.5, ease: "power4.inOut" })
              .to("#loader", { height: 0, duration: 1, ease: "expo.inOut" })
              .to("#hero-tagline", { opacity: 1, duration: 1 })
              .to("#hero-main-title", { opacity: 1, y: 0, duration: 1 }, "-=0.5")
              .to("#hero-cta", { opacity: 1, duration: 1 }, "-=0.5");
 
-        // Section Parallax
         gsap.to("#parallax-img", {
-            scrollTrigger: {
-                trigger: "#parallax-img",
-                scrub: true,
-                start: "top bottom",
-                end: "bottom top"
-            },
-            y: -150
+            scrollTrigger: { trigger: "#parallax-img", scrub: true, start: "top bottom", end: "bottom top" },
+            y: -100
         });
 
-        // Card Entrance
         document.querySelectorAll('.luxury-card').forEach(card => {
             gsap.from(card, {
-                scrollTrigger: { trigger: card, start: "top 90%" },
-                opacity: 0, y: 40, duration: 1.5, ease: "power4.out"
+                scrollTrigger: { trigger: card, start: "top 95%" },
+                opacity: 0, y: 30, duration: 1, ease: "power2.out"
             });
         });
 
-        // --- 4. FIREBASE & EMAIL INTEGRATION ---
-        
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyALjxiu0zamkb8oq0cV-wsB5IpTxDO28zo",
             authDomain: "buisness-4de04.firebaseapp.com",
@@ -352,17 +308,13 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // EmailJS Initialize
-        (function() {
-            emailjs.init("2OKY1ub0sfgMn3qRE"); // Your Public Key Added
-        })();
+        (function() { emailjs.init("2OKY1ub0sfgMn3qRE"); })();
 
         const form = document.getElementById('bookingForm');
         const sBtn = document.getElementById('submitBtn');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             sBtn.innerText = "PROCESSING...";
             sBtn.disabled = true;
 
@@ -374,28 +326,17 @@
             };
 
             try {
-                // 1. Save to Firebase
                 await db.collection("inquiries").add(userData);
-
-                // 2. Send Email via EmailJS
-                // IMPORTANT: Replace 'service_id' and 'template_id' with yours from EmailJS Dashboard
-                await emailjs.send(
-                    "service_6aurr0n", // Change to your Service ID
-                    "template_y54ekio", // Change to your Template ID
-                    {
-                        from_name: userData.client_name,
-                        reply_to: userData.client_email,
-                        message: userData.request,
-                        to_email: "your-email@gmail.com" 
-                    }
-                );
-
-                alert("Success! Your private inquiry has been received and emailed.");
+                await emailjs.send("service_6aurr0n", "template_y54ekio", {
+                    from_name: userData.client_name,
+                    reply_to: userData.client_email,
+                    message: userData.request,
+                    to_email: "your-email@gmail.com" 
+                });
+                alert("Success! Your private inquiry has been received.");
                 form.reset();
-
             } catch (err) {
-                console.error("Error: ", err);
-                alert("Data saved to Firebase, but Email failed. Please check your EmailJS Service/Template IDs.");
+                alert("Submission error. Please check your connection.");
             } finally {
                 sBtn.innerText = "Send Inquiry";
                 sBtn.disabled = false;
